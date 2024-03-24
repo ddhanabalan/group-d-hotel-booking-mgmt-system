@@ -12,9 +12,6 @@ app.config["DEBUG"] = True
 app.config['JWT_SECRET_KEY'] = os.getenv('jwt_key')
 jwt = JWTManager(app)
 
-# Hardcoded username and password for demonstration purposes
-USERNAME = ['user','test']
-PASSWORD = 'password'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = os.getenv('dbpwd')
@@ -23,17 +20,9 @@ app.config['MYSQL_DB'] = 'HOTEL'
 mysql = MySQL(app)
 
 @app.route('/')
-def hello_world():
-    try:
-        cursor = mysql.connection.cursor()
-        # Execute query
-        cursor.callproc("login",("aasif","password"))
-        databases = cursor.fetchall()
-        cursor.close()
-        return jsonify({"res":databases})
+def index():
+    return jsonify({"res":"Nothing here"})
 
-    except Exception as e:
-        return jsonify({'error': str(e)})
 @app.route('/login', methods=['POST'])
 def login():
     data=request.get_json()
@@ -60,7 +49,7 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 @app.errorhandler(NoAuthorizationError)
 def handlerror(ex):
-    return jsonify({'MSG':"NOPPE"}),401
+    return jsonify({'MSG':"NOT AUTHENTICATED"}),401
 #home
 @app.route('/home', methods=['GET'])
 def home():
@@ -128,17 +117,34 @@ def book_room():
         cursor.close()
     except Exception as e:
         return jsonify({'error': str(e)})
-    return jsonify({'result':res})
+    return jsonify({'RID':res})
     
 @app.errorhandler(NoAuthorizationError)
 def handlerror(ex):
-    return jsonify({'MSG':"NOPPE"})
+    return jsonify({'MSG':"NOT AUTHENTICATED"})
+
+#cancel a booking after verifying jwt token
+@app.route('/cancellation', methods=['POST'])
+@jwt_required()
+def cancel_book():
+    data=request.json
+    if not data:
+        return jsonify({'message': 'data is missing'})
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("call cancel_book(%s)"%data["bid"])
+        res = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    return jsonify({'result':res})
 
 @app.route('/signup/user', methods=['POST'])
 def usr_signup():
     data=request.json
     if not data:
-        return jsonify({'message': 'Authentication is required!'}), 401
+        return jsonify({'message': 'Invalid data!'}), 401
     try:
         err="non"
         cursor = mysql.connection.cursor()
@@ -154,24 +160,17 @@ def usr_signup():
         return jsonify({"result":res})
     except Exception as e:
         return jsonify({'error': str(e)})
-    return "helloo"
 
 @app.route('/signup/mngr', methods=['POST'])
 def mngr_signup():
         #insert records to mngr table
         return "manager added"
 
-@app.route('/bookrm', methods=['POST'])
-def book():
-        #update table tracking booking of rooms in each property
-        return jsonify({'userid': 1,'property_id':98875,'date':'14-05-2024','booking_status':'Success'})
-@app.route('/test')
-def check_z():
-   return jsonify({'hello': 'No string provided'})
-
-#mydb.close()
+@app.route('/login/mngr', methods=['POST'])
+def mngr_login():
+        #insert records to mngr table
+        return "manager login!"
 
 if __name__ == '__main__':
 
     app.run()
-
