@@ -1,7 +1,7 @@
 import React from 'react'
-import PackageDetail from '../components/PackageDetail'
-import SliderCarousel from '../components/SliderCarousel'
-import { HeroSection } from '../components/HeroSection'
+import PackageDetail from '../Components/PackageDetail'
+import SliderCarousel from '../Components/SliderCarousel'
+import { HeroSection } from '../Components/HeroSection'
 
 const Home = () => {
   return (

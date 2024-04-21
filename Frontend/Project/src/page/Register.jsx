@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
+    const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
@@ -12,17 +13,18 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         
-        axios.post( 'http://localhost:3001/login', {email, password})
+        axios.post( 'http://localhost:3001/register', {name, email, password})
         .then(result => {
             console.log(result);
-            if(result.data === "Success"){
-                console.log("Login Success");
-                alert('Login successful!')
-                navigate('/home');
+            if(result.data === "Already registered"){
+                alert("E-mail already registered! Please Login to proceed.");
+                navigate('/login');
             }
             else{
-                alert('Incorrect password! Please try again.');
+                alert("Registered successfully! Please Login to proceed.")
+                navigate('/login');
             }
+            
         })
         .catch(err => console.log(err));
     }
@@ -32,8 +34,21 @@ const Login = () => {
         <div>
             <div className="d-flex justify-content-center align-items-center text-center vh-100" style= {{backgroundImage : "linear-gradient(#00d5ff,#0095ff,rgba(93,0,255,.555))"}}>
                 <div className="bg-white p-3 rounded" style={{width : '40%'}}>
-                    <h2 className='mb-3 text-primary'>Login</h2>
+                    <h2 className='mb-3 text-primary'>Register</h2>
                     <form onSubmit={handleSubmit}>
+                        <div className="mb-3 text-start">
+                            <label htmlFor="exampleInputEmail1" className="form-label">
+                                <strong >Name</strong>
+                            </label>
+                            <input 
+                                type="text"
+                                placeholder="Enter Name"
+                                className="form-control" 
+                                id="exampleInputname" 
+                                onChange={(event) => setName(event.target.value)}
+                                required
+                            /> 
+                        </div>
                         <div className="mb-3 text-start">
                             <label htmlFor="exampleInputEmail1" className="form-label">
                                 <strong>Email Id</strong>
@@ -60,15 +75,15 @@ const Login = () => {
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary">Login</button>
+                        <button type="submit" className="btn btn-primary">Register</button>
                     </form>
-                    {/* TO add ' appostopee */}
-                    <p className='container my-2'>Don&apos;t have an account?</p>
-                    <Link to='/Register' className="btn btn-secondary">Register</Link>
+
+                    <p className='container my-2'>Already have an account ?</p>
+                    <Link to='/Login' className="btn btn-secondary">Login</Link>
                 </div>
             </div>
         </div>
     )
 }
 
-export default Login
+export default Register

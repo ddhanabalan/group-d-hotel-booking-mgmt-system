@@ -1,11 +1,11 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
+import Footer from "./Components/Footer";
+import Header from "./Components/Header";
 import Home from "./page/Home";
 import Login from "./page/Login"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ErrorPage } from "./page/ErrorPage";
 import GlobleCotext from "./contextApi/GlobleContex";
-import SignUp from "./page/SignUp";
+import Register from "./page/Register";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/Login" element={<Login/>}/>
-          <Route path="/SignUp" element={<SignUp/>}/>
+          <Route path="/Register" element={<Register/>}/>
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<ErrorPage/>}/>
         </Routes>
