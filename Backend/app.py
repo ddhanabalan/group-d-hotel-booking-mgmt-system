@@ -161,15 +161,132 @@ def usr_signup():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+#Account signup for manager
 @app.route('/signup/mngr', methods=['POST'])
 def mngr_signup():
-        #insert records to mngr table
-        return "manager added"
+    data=request.json
+    if not data:
+        return jsonify({'message': 'Invalid data!'}), 401
+    try:
+        err="non"
+        cursor = mysql.connection.cursor()
+        # Execute query
+        cursor.execute("call mngr_signup('%s','%s','%d','%s',@err)"%(data["username"],data["password"],data["pid"],data["email"]))
+        res = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+        cursor = mysql.connection.cursor()
+        cursor.execute("select @err")
+        res = cursor.fetchall()
+        cursor.close()
+        return jsonify({"result":res})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    return "manager added"
 
+#Account signin for manager
 @app.route('/login/mngr', methods=['POST'])
 def mngr_login():
-        #insert records to mngr table
-        return "manager login!"
+    data=request.get_json()
+    if not data:
+        return jsonify({'message': 'Authentication is required!'}), 401
+    try:
+        cursor = mysql.connection.cursor()
+        # Execute query
+        cursor.callproc("mngr_login",(data["username"],data["password"]))
+        res = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    if len(res)==1:
+        access_token = create_access_token(identity=res[0][0])
+        print("Manager for ",res[0][0]," logged in")
+        return jsonify({'access_token': access_token}), 200
+    else:
+        return jsonify({'message': 'Invalid username or password!'}), 200
+
+#update room count details for Manager
+@app.route('/mngr/roomUpdate', methods=['POST'])
+@jwt_required()
+def updateCount():
+    current_user = get_jwt_identity()
+    print(current_user)
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.callproc("get_pid")
+        res = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    data=request.json
+    if not data:
+        return jsonify({'message': 'data is missing'})
+    if current_user not in res[0] or current_user != int(data["pid"]):
+        return jsonify({"msg":"You are not The manager for this hotel"})
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("call room_count_update(%s,%s,%s)",(data["pid"],data["cat"],data["num"]))
+        res = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    return jsonify({'result':"Room count has been updated to "+(data["num"])})
+
+#update room count details for Manager
+@app.route('/mngr/priceUpdate', methods=['POST'])
+@jwt_required()
+def updatePrice():
+    current_user = get_jwt_identity()
+    print(current_user)
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.callproc("get_pid")
+        res = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    data=request.json
+    if not data:
+        return jsonify({'message': 'data is missing'})
+    if current_user not in res[0] or current_user != int(data["pid"]):
+        return jsonify({"msg":"You are not The manager for this hotel"})
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("call room_price_update(%s,%s,%s)",(data["pid"],data["cat"],data["price"]))
+        res = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    return jsonify({'result':"Room Price has been updated for RT"+data["cat"]+" Catagory Rooms to "+data["price"]})
+
+#Fetch Records for Manager
+@app.route('/mngr/fetchRec', methods=['POST'])
+@jwt_required()
+def fetchRec():
+    current_user = get_jwt_identity()
+    print(current_user)
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.callproc("get_pid")
+        res = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    data=request.json
+    if not data:
+        return jsonify({'message': 'data is missing'})
+    if current_user not in res[0] or current_user != int(data["pid"]):
+        return jsonify({"msg":"You are not The manager for this hotel"})
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.callproc("fetch_rec",(data["pid"],))
+        res = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    return jsonify({'result':res})
 
 if __name__ == '__main__':
 
