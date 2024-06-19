@@ -1,0 +1,1 @@
+['no_guests', 'room_category_1', 'room_category_2', 'room_category_3', 'room_category_4', 'property_name_1', 'property_name_2', 'property_name_3', 'property_name_4', 'property_name_5', 'property_name_6', 'city_1', 'city_2', 'city_3', 'city_4', 'no_days_checkin_checkout']
