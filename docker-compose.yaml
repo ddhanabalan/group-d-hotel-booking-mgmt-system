@@ -1,0 +1,56 @@
+
+services:
+  db:
+    build:
+      context: ./mysql
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: Styl@123
+      MYSQL_DATABASE: HOTEL
+    volumes:
+      - ./mysql/sqlfile:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: ./flask
+    container_name: flask_app
+    environment:
+      FLASK_ENV: development
+      DATABASE_HOST: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Styl@123
+      DATABASE_DB: HOTEL
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  ml:
+    build:
+      context: ./ml
+    container_name: ml_flask_app
+    environment:
+      FLASK_ENV: development
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

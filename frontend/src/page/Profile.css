@@ -1,0 +1,38 @@
+/* Profile.css */
+.profile-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .profile-info {
+    margin-bottom: 20px;
+  }
+  
+  .booking-history {
+    display: grid;
+    grid-gap: 10px;
+  }
+  
+  .booking-card {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .booking-card:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .booking-card.expanded {
+    background-color: #f0f0f0;
+  }
+  
+  .booking-details {
+    margin-top: 10px;
+  }
+  
