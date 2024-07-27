@@ -204,30 +204,30 @@ const Rooms = () => {
             <div>
               {hotelDetails.map(detail => (
                 <RoundedBox key={detail.id}>
-                  <Typography variant="h5">{detail.name}</Typography>
-                  <Typography variant="h6" style={{ marginBottom: '10px' }}>{detail.city}</Typography>
-                  <Typography variant="body1">{detail.description}</Typography>
-                  <Typography variant="body1">{detail.category}</Typography>
+                  <Typography variant="h5 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl d-flex justify-content-center align-items-center"><h1>{detail.name}</h1></Typography>
+                  <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl d-flex justify-content-center align-items-center" style={{ marginBottom: '10px' }}>{detail.city}</Typography>
                 </RoundedBox>
               ))}
             </div>
           </div>
 
           {/* Room Cards */}
+          <div classname="rooms-container">
           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             {RoomDetail.map(room => (
               <RoomCard key={room.type} onClick={() => handleRoomClick(room)}>
-                <h2 className="text-lg font-semibold">{room.name}</h2>
+                <h2 className="rooms-title font-semibold">{room.name}</h2>
                 <p className="text-lg text-gray-500"></p>
                 {hotelDetails.length > 0 && (
                   <>
-                    <p className="text-sm">Total Room Count: {HotelDetail[`rt${room.type}_count`]}</p>
-                    <p className="text-sm">Room Cost: ${HotelDetail[`rt${room.type}_cost`] || '-'}</p>
+                    <p className="rooms-title2">Total Room Count: {HotelDetail[`rt${room.type}_count`]}</p>
+                    <p className="rooms-title2">Room Cost: ${HotelDetail[`rt${room.type}_cost`] || '-'}</p>
                   </>
                 )}
               </RoomCard>
             ))}
           </div>
+            </div>
 
           {/* Room Detail Dialog */}
           <Dialog open={openDialog} onClose={handleCloseDialog}>
