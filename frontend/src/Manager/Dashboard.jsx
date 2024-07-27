@@ -247,7 +247,7 @@ function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="" style={{ marginBottom: '10px' }}>
+      <div className="" style={{ marginBottom: '25px' }}>
         <Button
           component={Link}
           to="/HomeMan"
@@ -260,8 +260,8 @@ function Dashboard() {
         <div className="">
           {hotelDetails && hotelDetails.length > 0 && hotelDetails.map(detail => (
             <RoundedBox key={detail[0]}> {/* Adjust the key based on your data structure */}
-              <Typography variant="h5">{detail[1]}</Typography> {/* Adjust properties based on your data structure */}
-              <Typography variant="h6" style={{ }}>{detail[3]}</Typography>
+              <Typography variant="h5 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl rooms-title d-flex justify-content-center align-items-center"><h1>{detail[1]}</h1></Typography> {/* Adjust properties based on your data structure */}
+              <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl rooms-title d-flex justify-content-center align-items-center" style={{ }}>{detail[3]}</Typography>
             </RoundedBox>
           ))}
         </div>
