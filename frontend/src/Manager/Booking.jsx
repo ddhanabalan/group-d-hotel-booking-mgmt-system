@@ -139,7 +139,7 @@ function Booking() {
             <th onClick={() => handleSort('status')} className={`bookings-th ${sortColumn === 'status' ? (sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc') : ''}`}>
               Status
             </th>
-            <th className="bookings-th">Cancellation Prediction</th>
+            <th className="bookings-th">Chances of Cancellation</th>
           </tr>
         </thead>
         <tbody>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Grid, Paper, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios'; // Import axios
 import Loader from '../Components/Loader';
+import "./Rooms.css"
 
 // Sample data for RoomDetail and HotelDetail
 import { RoomDetail } from "../Detail/RoomDetail";
@@ -24,7 +25,8 @@ const Rooms = () => {
       setLoading(true); // Start loading
       try {
         const storedHotelDetails = JSON.parse(localStorage.getItem("HotelDetails")) || [];
-        setHotelDetails(storedHotelDetails);
+        setHotelDetails(storedHotelDetails[0]);
+
 
         const storedPID = localStorage.getItem('pid');
         if (storedPID) {
@@ -184,39 +186,36 @@ const Rooms = () => {
 
   return (
     <>
-      {loading ? (
-        <div>Loading...</div> // Show loading indicator while data is being fetched
-      ) : error ? (
-        <div>{error}</div> // Show error message if data fetching fails
-      ) : (
+      
         <>
           {/* Display hotel details */}
           <div className="container mx-auto p-4">
-            <Button
-              component={Link}
-              to="/HomeMan"
-              variant="outlined"
-              color="primary"
-              style={{ marginBottom: '20px' }}
-            >
-              Back
-            </Button>
+          <Button
+        component={Link}
+        to="/HomeMan"
+        variant="outlined"
+        color="primary"
+        style={{ marginBottom: '20px' }}
+      >
+        Back
+      </Button>
             <div>
               {hotelDetails.map(detail => (
                 <RoundedBox key={detail.id}>
                   <Typography variant="h5 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl d-flex justify-content-center align-items-center"><h1>{detail.name}</h1></Typography>
-                  <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl d-flex justify-content-center align-items-center" style={{ marginBottom: '10px' }}>{detail.city}</Typography>
+                  <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl d-flex justify-content-center align-items-center" style={{ marginBottom: '10px' }}>{detail.description}</Typography>
+
                 </RoundedBox>
               ))}
             </div>
           </div>
 
           {/* Room Cards */}
-          <div classname="rooms-container">
+          <div className="rooms-container">
           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             {RoomDetail.map(room => (
               <RoomCard key={room.type} onClick={() => handleRoomClick(room)}>
-                <h2 className="rooms-title font-semibold">{room.name}</h2>
+                <h2 className="rooms-title">{room.name}</h2>
                 <p className="text-lg text-gray-500"></p>
                 {hotelDetails.length > 0 && (
                   <>
@@ -227,7 +226,7 @@ const Rooms = () => {
               </RoomCard>
             ))}
           </div>
-            </div>
+          </div>
 
           {/* Room Detail Dialog */}
           <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -268,7 +267,7 @@ const Rooms = () => {
             )}
           </Dialog>
         </>
-      )}
+      
     </>
   );
 };

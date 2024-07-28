@@ -13,6 +13,7 @@ import {
 import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Loader from "../Components/Loader"
 
 // const user = {
 //   name: 'John Doe',
@@ -29,6 +30,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const[user,setUser] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   
 
@@ -83,6 +85,7 @@ const Profile = () => {
       // Assuming response.data.result is the array of bookings data
       const newBookings = convertResponseToBookings(response.data.result);
       setBookings(newBookings);
+      setLoading(false);
 
       // Store the bookings data in local storage
       localStorage.setItem('bookingData', JSON.stringify(response.data.result));  
@@ -108,9 +111,6 @@ const Profile = () => {
     .then(response => {
       console.log('POST request successful:');
       setUser(response.data.res[0]);
-
-
-
       localStorage.setItem('userData', JSON.stringify(response.data.res));  
       
     })
@@ -195,6 +195,13 @@ const Profile = () => {
   const handleCloseCancelDialog = () => {
     setCancelBookingId(null);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader /> {/* Use Loader component */}
+      </div>
+    )}
 
 
   return (

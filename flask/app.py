@@ -4,10 +4,13 @@ from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import datetime
+from datetime import timedelta
 import requests
 import json
 import threading
 import schedule,time
+
+
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +23,8 @@ app.config['MYSQL_HOST'] = 'db'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Styl@123'
 app.config['MYSQL_DB'] = 'HOTEL'
+
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 mysql = MySQL(app)
 

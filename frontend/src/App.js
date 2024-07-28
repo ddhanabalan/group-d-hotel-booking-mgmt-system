@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import GlobleContext from './contextApi/GlobleContex';
 import Loader from './Components/Loader';
 
@@ -29,8 +29,27 @@ import HeaderManager from './Components/HeaderManager';
 import Footer from './Components/Footer';
 import ProtectedRoute from './Components/ProtectedRoute';
 
-// Loader Component
+// RedirectIfLoggedIn Component
+const RedirectIfLoggedIn = ({ element }) => {
+  const [userType, setUserType] = useState('');
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedUserType = localStorage.getItem('UserType');
+        if (storedUserType) {
+          setUserType(storedUserType);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user type:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return userType ? <Navigate to="/" /> : element;
+};
 
 function App() {
   const [userType, setUserType] = useState('');
@@ -69,44 +88,23 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/ErrorPage" element={<ErrorPage />} />
           <Route path="/SingleHotelView/:id" element={<SingleHotelView />} />
-          <Route path="/ManagerRegister" element={<ManagerRegister />} />
-          <Route path="/ManagerLogin" element={<ManagerLogin />} />
+          <Route path="/Login" element={<RedirectIfLoggedIn element={<Login />} />} />
+          <Route path="/Register" element={<RedirectIfLoggedIn element={<Register />} />} />
+          <Route path="/ManagerRegister" element={<RedirectIfLoggedIn element={<ManagerRegister />}/>} />
+          <Route path="/ManagerLogin" element={<RedirectIfLoggedIn element={<ManagerLogin />}/>} />
+          <Route path="/ErrorPage" element={<ErrorPage />} />
 
           {/* Protected Routes for Users */}
-          <Route 
-            path="/CategoryPage" 
-            element={<ProtectedRoute element={<CategoryPage />} allowedUserTypes={['user']} userType={userType} />} 
-          />
-          <Route 
-            path="/Profile" 
-            element={<ProtectedRoute element={<Profile />} allowedUserTypes={['user']} userType={userType} />} 
-          />
-          <Route 
-            path="/PaymentPage" 
-            element={<ProtectedRoute element={<PaymentPage />} allowedUserTypes={['user']} userType={userType} />} 
-          />
+          <Route path="/CategoryPage" element={<ProtectedRoute element={<CategoryPage />} allowedUserTypes={['user']} userType={userType} />} />
+          <Route path="/Profile" element={<ProtectedRoute element={<Profile />} allowedUserTypes={['user']} userType={userType} />} />
+          <Route path="/PaymentPage" element={<ProtectedRoute element={<PaymentPage />} allowedUserTypes={['user']} userType={userType} />} />
 
           {/* Protected Routes for Managers */}
-          <Route 
-            path="/Dashboard" 
-            element={<ProtectedRoute element={<Dashboard />} allowedUserTypes={['manager']} userType={userType} />} 
-          />
-          <Route 
-            path="/Rooms" 
-            element={<ProtectedRoute element={<Rooms />} allowedUserTypes={['manager']} userType={userType} />} 
-          />
-          <Route 
-            path="/HomeMan" 
-            element={<ProtectedRoute element={<HomeMan />} allowedUserTypes={['manager']} userType={userType} />} 
-          />
-          <Route 
-            path="/Booking" 
-            element={<ProtectedRoute element={<Booking />} allowedUserTypes={['manager']} userType={userType} />} 
-          />
+          <Route path="/Dashboard" element={<ProtectedRoute element={<Dashboard />} allowedUserTypes={['manager']} userType={userType} />} />
+          <Route path="/Rooms" element={<ProtectedRoute element={<Rooms />} allowedUserTypes={['manager']} userType={userType} />} />
+          <Route path="/HomeMan" element={<ProtectedRoute element={<HomeMan />} allowedUserTypes={['manager']} userType={userType} />} />
+          <Route path="/Booking" element={<ProtectedRoute element={<Booking />} allowedUserTypes={['manager']} userType={userType} />} />
 
           {/* Catch-all Route */}
           <Route path="*" element={<ErrorPage />} />

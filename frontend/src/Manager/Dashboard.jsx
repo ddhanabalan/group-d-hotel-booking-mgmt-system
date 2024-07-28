@@ -246,22 +246,23 @@ function Dashboard() {
   }
 
   return (
+    <div className='header'>
     <div className="container mx-auto p-4">
       <div className="" style={{ marginBottom: '25px' }}>
-        <Button
-          component={Link}
-          to="/HomeMan"
-          variant="outlined"
-          color="primary"
-          style={{ marginBottom: '20px' }}
-        >
-          Back
-        </Button>
+      <Button
+        component={Link}
+        to="/HomeMan"
+        variant="outlined"
+        color="primary"
+        style={{ marginBottom: '20px' }}
+      >
+        Back
+      </Button>
         <div className="">
           {hotelDetails && hotelDetails.length > 0 && hotelDetails.map(detail => (
             <RoundedBox key={detail[0]}> {/* Adjust the key based on your data structure */}
               <Typography variant="h5 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl rooms-title d-flex justify-content-center align-items-center"><h1>{detail[1]}</h1></Typography> {/* Adjust properties based on your data structure */}
-              <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl rooms-title d-flex justify-content-center align-items-center" style={{ }}>{detail[3]}</Typography>
+              <Typography variant="h6 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl rooms-title d-flex justify-content-center align-items-center" style={{ }}>{detail[3]}</Typography>
             </RoundedBox>
           ))}
         </div>
@@ -269,7 +270,7 @@ function Dashboard() {
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <ChartContainer>
+          <ChartContainer >
             <ChartTitle variant="h6">
               Room Availability
             </ChartTitle>
@@ -334,7 +335,7 @@ function Dashboard() {
       <Grid>
         {/* Monthly Revenue Line Chart */}
         <Grid item xs={12} md={6}>
-          <ChartContainer>
+          <ChartContainer className="" style={{ marginTop: '25px' }}>
             <ChartTitle variant="h6">Monthly Revenue</ChartTitle>
             <BarChart
               width={800}
@@ -352,6 +353,7 @@ function Dashboard() {
           </ChartContainer>
         </Grid>
       </Grid>
+    </div>
     </div>
   );
 }

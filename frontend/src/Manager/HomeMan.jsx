@@ -32,6 +32,7 @@ const HomeMan = () => {
   const navigate = useNavigate();
   const [pid, setPid] = useState(null);
   const [filteredRooms, setFilteredRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token'); // Get token from localStorage
@@ -48,6 +49,7 @@ const HomeMan = () => {
         const receivedPid = response.data['logged_in_as'];
         setPid(receivedPid); // Set PID state
         localStorage.setItem('pid', receivedPid); // Store PID in localStorage
+        
       })
       .catch(error => console.error('Error fetching PID:', error));
     } else {
@@ -58,6 +60,8 @@ const HomeMan = () => {
     // Filtering hotel room details based on pid
     const filtered = HotelRoomDetail.filter(room => room.pid === parseInt(storedPid));
     setFilteredRooms(filtered);
+
+    setLoading(false);
     localStorage.setItem("HotelDetails",JSON.stringify(filtered));
   }, [pid]); // Add pid to the dependency array
 
@@ -68,21 +72,25 @@ const HomeMan = () => {
     navigate('/');
   };
 
+  if (loading) {
+    return <Loader />; // Show loader while data is being fetched
+  }
+
   return (
     <header>
     <div className="container m-auto">
       <PageContainer>
-      <Typography variant="h3" gutterBottom style={{ color: 'white' }}>
+      <Typography variant="h2" gutterBottom style={{ color: 'white' }}>
         Welcome to ATLIQ
       </Typography>
         {/* Display filtered rooms */}
         {filteredRooms.map(room => (
-          <RoomContainer key={room.id} item xs={12}>
+          <RoomContainer key={room.id} item xs={20}>
             <PaperContainer>
-              <Typography variant="h5">{room.name}</Typography>
-              <Typography variant="h6" style={{ marginBottom: '10px' }}>{room.city}</Typography>
-              <Typography variant="body1">{room.description}</Typography>
-              <Typography variant="body1">{room.category}</Typography>
+              <Typography variant="h5 mt-8 text-3xl font-bold tracking-tight md:text-4xl lg:text-6xl d-flex justify-content-center align-items-center">{room.name}</Typography>
+              <Typography variant="h6 d-flex justify-content-center align-items-center" style={{ marginBottom: '10px' }}><h1>{room.city}</h1></Typography>
+              <Typography variant="body1 d-flex justify-content-center align-items-center"><h2>{room.description}</h2></Typography>
+              <Typography variant="body1 d-flex justify-content-center align-items-center"><h3>{room.category}</h3></Typography>
               {/* Add more details as needed */}
             </PaperContainer>
 
